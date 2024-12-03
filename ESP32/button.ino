@@ -6,7 +6,7 @@ int lastState = HIGH; // the previous state from the input pin
 int currentState;     // the current reading from the input pin
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   // initialize the pushbutton pin as an pull-up input
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
