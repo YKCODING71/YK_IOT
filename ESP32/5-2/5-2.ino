@@ -4,8 +4,8 @@
 #include <ESPAsyncWebSrv.h>
 
 // Replace with your network credentials
-const char* ssid = "REPLACE_WITH_YOUR_SSID";
-const char* password = "REPLACE_WITH_YOUR_PASSWORD";
+const char* ssid = "PASCUCCI 2";
+const char* password = "PAS123456789";
 
 // 현재 출력 상태를 저장하는 보조 변수
 String output2State = "off";

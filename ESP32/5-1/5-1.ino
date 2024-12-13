@@ -1,8 +1,8 @@
 #include <WiFi.h>        // WiFi 라이브러리를 포함합니다.
 #include <WebServer.h>   // WebServer 라이브러리를 포함합니다.
 
-const char* ssid = "YourWiFiSSID";             // 연결할 Wi-Fi의 SSID를 입력합니다.
-const char* password = "YourWiFiPassword";     // Wi-Fi의 비밀번호를 입력합니다.
+const char* ssid = "PASCUCCI 2";             // 연결할 Wi-Fi의 SSID를 입력합니다.
+const char* password = "PAS123456789";     // Wi-Fi의 비밀번호를 입력합니다.
 
 WebServer server(80);                          // 포트 번호 80을 사용하여 WebServer 객체를 생성합니다.
 
@@ -18,13 +18,6 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print(".");
-  }
-
-  server.on("/", handleRoot);                    // "/" 경로에 대한 요청을 handleRoot() 함수로 처리합니다.
-
-  while (WiFi.status() != WL_CONNECTED) {        // Wi-Fi 연결이 완료될 때까지 대기합니다.
-      delay(500);
-      Serial.print(".");
   }
 
   Serial.println("");

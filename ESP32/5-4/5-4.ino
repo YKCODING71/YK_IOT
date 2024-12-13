@@ -5,8 +5,8 @@
 #include <DHT.h>
 
 // 실습 환경의 WIFI아이디와 비밀번호로 수정하세요.
-const char* ssid = "네트워크_SSID";
-const char* password = "네트워크_비밀번호";
+const char* ssid = "PASCUCCI 2";
+const char* password = "PAS123456789";
 
 #define DHTPIN 18     // DHT 센서에 연결된 디지털 핀
 
