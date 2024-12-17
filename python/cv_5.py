@@ -9,10 +9,10 @@ while True:
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # 빨간색의 범위를 정의합니다.
-    lower_red = np.array([30, 80, 40])
-    upper_red = np.array([40, 255, 255])
-    # lower_red = np.array([177, 60, 100])
-    # upper_red = np.array([180, 255, 255])
+    #lower_red = np.array([30, 80, 40])
+    #upper_red = np.array([40, 255, 255])
+    lower_red = np.array([177, 60, 100])
+    upper_red = np.array([180, 255, 255])
 
     red_mask = cv2.inRange(hsv_frame, lower_red, upper_red)
 
