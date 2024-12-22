@@ -1,34 +1,45 @@
-const int trigPin = 12;  // 초음파 센서의 트리거 핀
-const int echoPin = 14;  // 초음파 센서의 에코 핀
+#include <WiFi.h>
+#include <WebSocketsServer.h>
 
-long duration;          // 음파의 왕복 시간(마이크로초)
-float distanceCm;       // 거리(cm)
-float distanceInch;     // 거리(인치)
+const char* ssid = "PASCUCCI 2";             // 연결할 Wi-Fi의 SSID
+const char* password = "PAS123456789";       // Wi-Fi의 비밀번호
+
+WebSocketsServer webSocket = WebSocketsServer(80); // WebSocket 서버 포트: 80
+
+void onWebSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+  switch (type) {
+    case WStype_CONNECTED: // 클라이언트가 연결된 경우
+      Serial.println("Client connected!");
+      break;
+
+    case WStype_TEXT: // 클라이언트가 메시지를 보낸 경우
+      Serial.printf("Message from client: %s\n", payload);
+      webSocket.sendTXT(num, payload); // 클라이언트로 에코 메시지 전송
+      break;
+
+    default:
+      break;
+  }
+}
 
 void setup() {
-  Serial.begin(115200); // 시리얼 통신 시작 (통신 속도: 115200bps)
-  pinMode(trigPin, OUTPUT);  // 트리거 핀을 출력으로 설정
-  pinMode(echoPin, INPUT);   // 에코 핀을 입력으로 설정
+  Serial.begin(115200);
+  Serial.println("Connecting to Wi-Fi...");
+  
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\nWi-Fi connected!");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  webSocket.begin();                 // WebSocket 서버 시작
+  webSocket.onEvent(onWebSocketEvent); // WebSocket 이벤트 콜백 설정
 }
 
 void loop() {
-  digitalWrite(trigPin, LOW);           // 트리거 핀 LOW로 초기화
-  delayMicroseconds(2);                 // 2 마이크로초 대기
-  digitalWrite(trigPin, HIGH);          // 트리거 핀 HIGH로 설정하여 초음파 송신
-  delayMicroseconds(10);                // 10 마이크로초 동안 
-  digitalWrite(trigPin, LOW);           // 초음파 송신 종료
-  
-  duration = pulseIn(echoPin, HIGH);     // 에코 핀에서 초음파의 왕복 시간 측정
-  
-  distanceCm = duration * 0.034/2; // 거리 계산
-  
-  distanceInch = distanceCm * 0.393701; // 인치로 변환
-  
-  Serial.print("Distance: ");
-  Serial.print(distanceCm);              // 거리 (cm)
-  Serial.print("(cm)  ");
-  Serial.print(distanceInch);            // 거리 (인치)
-  Serial.println("(inch)");
-  
-  delay(1000);                           // 1초 대기
+  webSocket.loop(); // WebSocket 서버 동작
 }

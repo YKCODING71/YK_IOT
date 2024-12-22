@@ -1,15 +1,14 @@
 #include <WiFi.h>
 #include <WebSocketsServer.h>
 
-const char* ssid = "PASCUCCI 2";             // 연결할 Wi-Fi의 SSID를 입력합니다.
-const char* password = "PAS123456789";       // Wi-Fi의 비밀번호를 입력합니다.
+const char* ssid = "PASCUCCI 2";             // 연결할 Wi-Fi의 SSID
+const char* password = "PAS123456789";       // Wi-Fi의 비밀번호
 
 WebSocketsServer webSocket = WebSocketsServer(80);  // 80번 포트로 WebSocket 서버 설정
 
 // WebSocket 이벤트 처리 함수
 void onWebSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
-  
-  switch(type) {
+  switch (type) {
     case WStype_DISCONNECTED:                     // 연결이 끊어졌을 때
       Serial.printf("[%u] Disconnected!\n", num); // 연결 끊김 메시지 출력
       break;
@@ -24,15 +23,13 @@ void onWebSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t leng
 
     case WStype_TEXT:                             // 텍스트 메시지를 받았을 때
       Serial.printf("[%u] Text: %s\n", num, payload);  // 받은 텍스트 메시지 출력
-      webSocket.sendTXT(num, payload);          // 받은 텍스트 메시지를 다시 클라이언트에 보내기
+      if (strcmp((char*)payload, "a") == 0) {
+        webSocket.sendTXT(num, "hello");         // 클라이언트에 "hello" 메시지 전송
+      } else if (strcmp((char*)payload, "b") == 0) {
+        webSocket.sendTXT(num, "sleep");         // 클라이언트에 "sleep" 메시지 전송
+      }
       break;
 
-    case WStype_BIN:                           // 바이너리 메시지를 받았을 때 (처리 안 함)
-    case WStype_ERROR:                         // 오류 발생 시 (처리 안 함)
-    case WStype_FRAGMENT_TEXT_START:           // 텍스트 메시지 조각이 시작될 때 (처리 안 함)
-    case WStype_FRAGMENT_BIN_START:            // 바이너리 메시지 조각이 시작될 때 (처리 안 함)
-    case WStype_FRAGMENT:                      // 메시지 조각을 받을 때 (처리 안 함)
-    case WStype_FRAGMENT_FIN:                  // 메시지 조각의 끝을 받을 때 (처리 안 함)
     default:
       break;
   }
@@ -42,17 +39,14 @@ void setup() {
   Serial.begin(115200);                  // 시리얼 모니터 시작
   Serial.println("Connecting");
   WiFi.begin(ssid, password);            // Wi-Fi 네트워크에 연결 시작
-  
+
   // Wi-Fi가 연결될 때까지 대기
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");                   // 연결 중임을 표시
   }
-  
-  Serial.println("Connected!");           // Wi-Fi 연결 완료 메시지 출력
-  Serial.print("My IP address: ");
-  Serial.println(WiFi.localIP());         // ESP32의 IP 주소 출력
-  
+
+  Serial.println("\nConnected!");        // Wi-Fi 연결 완료 메시지 출력
   webSocket.begin();                     // WebSocket 서버 시작
   webSocket.onEvent(onWebSocketEvent);    // WebSocket 이벤트 콜백 함수 설정
 }
