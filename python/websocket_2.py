@@ -1,58 +1,30 @@
 import tkinter as tk
 import websocket
 
-# WebSocket 서버 주소
 ws = websocket.WebSocket()
-ws.connect("ws://172.30.1.19")
+ws.connect("ws://192.168.45.78")
 print("Connected to WebSocket server")
 
-# tkinter GUI 설정
 root = tk.Tk()
-root.title("WebSocket Client")
+root.title("ESP32 웹소켓 통신")
+root.geometry("320x200")  # 창 크기 설정
 
-# 출력창
-output_box = tk.Text(root, height=15, width=50, state="normal")
-output_box.pack()
+label = tk.Label(root, text="아래 버튼을 눌러보세요!")
+label.place(x=120, y=20)
 
-# 입력창
-input_box = tk.Entry(root, width=50)
-input_box.pack()
+def send_signal(signal, message):
+    #label.config(text=message) # 메시지를 레이블에 출력
+    ws.send(signal)             # WebSocket으로 메시지 전송
+    response = ws.recv()        # 서버로부터 수신된 메시지
+    label.config(text=f"수신된 메시지: {response}")  
 
-# 전송 버튼 클릭 시 동작
-def on_send_click():
-    # 1. 입력창에서 메시지를 가져옵니다.
-    message = input_box.get()
-    
-    # 2. 만약 입력창에 메시지가 비어있지 않으면
-    if message:
-        try:
-            # 3. 메시지를 WebSocket 서버로 전송합니다.
-            ws.send(message)
-            # 4. 전송한 메시지를 출력창에 보여줍니다.
-            output_box.insert(tk.END, f"Me: {message}\n")
-            
-            # 5. 서버로부터 응답을 기다립니다.
-            response = ws.recv()
-            # 6. 서버에서 받은 응답을 출력창에 표시합니다.
-            output_box.insert(tk.END, f"Server: {response}\n")
-        
-        except Exception as e:
-            # 7. 예외가 발생하면 오류 메시지를 출력창에 표시합니다.
-            output_box.insert(tk.END, f"Error: {e}\n")
-        
-        # 8. 입력창을 비웁니다. 새로운 메시지를 입력할 수 있게 합니다.
-        input_box.delete(0, tk.END)
+btn_on = tk.Button(root, text="LED 켜기", command=lambda: send_signal('1', "LED 켜짐 신호 전송!"),
+                   bg="green", fg="white")
+btn_on.place(x=80, y=80)  
 
-# 전송 버튼 설정
-send_button = tk.Button(root, text="Send", command=on_send_click)
-send_button.pack()
+btn_off = tk.Button(root, text="LED 끄기", command=lambda: send_signal('2', "LED 꺼짐 신호 전송!"),
+                    bg="red", fg="white")
+btn_off.place(x=180, y=80)  
 
-# 초기 메시지
-output_box.insert(tk.END, "메시지를 입력하고 Send 버튼을 클릭하세요.\n")
-
-# GUI 실행
 root.mainloop()
-
-# 종료 시 WebSocket 연결 닫기
 ws.close()
-print("연결이 종료되었습니다.")

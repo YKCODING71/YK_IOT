@@ -1,12 +1,11 @@
 #pip install websocket-client
 #pip install websockets
 
-
 import websocket
 
 # Connect to WebSocket server
 ws = websocket.WebSocket()
-ws.connect("ws://172.30.1.19")
+ws.connect("ws://192.168.45.78")
 print("Connected to WebSocket server")
 
 # Ask the user for some input and transmit it
