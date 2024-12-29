@@ -13,7 +13,7 @@ const char* ssid = "Your_SSID";          // 사용하는 WiFi 네트워크 이�
 const char* password = "Your_Password";  // 사용하는 WiFi 네트워크 비밀번호
 const int httpPort = 80;
 
-const char* apiKey = 7RjVwDorV%2FZymmbGrNcDZBxAZwZ%2BOlEEFLxaN1%2BVof9ijjOF38hhmKNd%2F7pKpLzdeLdxGYttPy5tMeU%2FuH2tWA%3D%3D;
+const char* apiKey = "7RjVwDorV%2FZymmbGrNcDZBxAZwZ%2BOlEEFLxaN1%2BVof9ijjOF38hhmKNd%2F7pKpLzdeLdxGYttPy5tMeU%2FuH2tWA%3D%3D";
 const char* version = "&ver=1.0";
 const char* server = "apis.data.go.kr";
 const char* stationName = "둔포면";
